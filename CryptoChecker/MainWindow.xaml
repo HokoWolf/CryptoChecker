@@ -7,6 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.4*" />
+                <ColumnDefinition Width="5px" />
+                <ColumnDefinition Width="0.6*" />
+            </Grid.ColumnDefinitions>
 
+            <TextBlock Text="{Binding Result}" TextWrapping="Wrap"></TextBlock>
+            <ListBox Grid.Column="2" ItemsSource="{Binding CoinsList}"></ListBox>
+        </Grid>
     </Grid>
 </Window>
