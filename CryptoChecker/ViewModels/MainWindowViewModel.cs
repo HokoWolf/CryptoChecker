@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Net.Http;
+using System.Windows;
 
 namespace CryptoChecker.ViewModels
 {
@@ -23,14 +25,17 @@ namespace CryptoChecker.ViewModels
 		{
 			using (HttpClient client = new())
 			{
-				client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36");
+				client.DefaultRequestHeaders.Add("User-Agent", 
+					((App)Application.Current).AppSettings.HttpClient.UserAgent);
 
-				var response = await client.GetAsync("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=50&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d");
+				var api = ((App)Application.Current).AppSettings.GeckoCoinApi;
+				var response = await client.GetAsync(Path.Combine(api.MainApiUrl, api.Top10CoinsUrl));
 
 				if (response.IsSuccessStatusCode)
 				{
 					var result = await response.Content.ReadAsStringAsync();
-					CoinsList = new ObservableCollection<CryptoCoin>(JsonConvert.DeserializeObject<List<CryptoCoin>>(result)!);
+					CoinsList = new ObservableCollection<CryptoCoin>(
+						JsonConvert.DeserializeObject<List<CryptoCoin>>(result)!);
 
 					foreach (var coin in CoinsList)
 					{
