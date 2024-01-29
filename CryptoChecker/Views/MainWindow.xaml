@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CryptoChecker.Views"
         xmlns:userControls="clr-namespace:CryptoChecker.Views.UserControls"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        WindowStyle="None" Height="800" Width="1200" FontSize="16">
+        WindowStyle="None" Height="800" Width="1200" FontSize="20">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -15,20 +15,144 @@
         
         <userControls:WindowManipulationMenu Width="auto" />
 
-        <ListView Grid.Row="1" x:Name="coinsList" 
-                  ItemsSource="{Binding CoinsList}">
+        <ListView Grid.Row="1" x:Name="coinsList" ItemsSource="{Binding CoinsList}" 
+                  Margin="30" BorderThickness="0">
+            
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="FontWeight" Value="Regular" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Border BorderBrush="LightGray" BorderThickness="0, 0.5, 0, 0"
+                                        Padding="0 20 0 20">
+                                    <GridViewRowPresenter 
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+
             <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="50" Header="#"
-                        DisplayMemberBinding="{Binding Market_Cap_Rank}" />
-                    <GridViewColumn Width="350" Header="Coin"
-                        DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Width="100" Header="Price"
-                        DisplayMemberBinding="{Binding Current_Price}" />
-                    <GridViewColumn Width="100" Header="24h Volume"
-                        DisplayMemberBinding="{Binding Total_Volume}" />
-                    <GridViewColumn Width="100" Header="Market Cap"
-                        DisplayMemberBinding="{Binding Market_Cap}" />
+                <GridView AllowsColumnReorder="False">
+                    <GridView.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="Padding" Value="20 10 20 10" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                        <Grid>
+                                            <Border x:Name="HeaderBorder"
+                                                    Background="Transparent"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="0 1 0 1"
+                                                    Padding="20 10 20 10">
+                                                <ContentPresenter VerticalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </GridView.ColumnHeaderContainerStyle>
+
+                    <GridViewColumn Header="#">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Market_Cap_Rank}"
+                                           HorizontalAlignment="Center" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="auto" Header="Coin">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Cursor="Hand">
+                                    <Image Source="{Binding Image}" Width="40" Height="40" 
+                                           VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                               Margin="10 0 0 0" FontWeight="DemiBold" />
+                                    <TextBlock Text="{Binding Symbol}" VerticalAlignment="Center" 
+                                               Margin="10 0 0 0" Foreground="DimGray" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="auto" Header="Price">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Right">
+                                    <TextBlock Text="$" />
+                                    <TextBlock Text="{Binding Current_Price}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="auto" Header="1h">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Price_Change_Percentage_1h_In_Currency}" />
+                                    <TextBlock Text="%" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="auto" Header="24h">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Price_Change_Percentage_24h_In_Currency}" />
+                                    <TextBlock Text="%" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="auto" Header="7d">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Price_Change_Percentage_7d_In_Currency}" />
+                                    <TextBlock Text="%" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="auto" Header="24h Volume">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" 
+                                            HorizontalAlignment="Right">
+                                    <TextBlock Text="$" />
+                                    <TextBlock Text="{Binding Total_Volume}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="auto" Header="Market Cap">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" 
+                                            HorizontalAlignment="Right">
+                                    <TextBlock Text="$" />
+                                    <TextBlock Text="{Binding Market_Cap}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
