@@ -1,15 +1,30 @@
 ﻿using CryptoChecker.Models;
+using CryptoChecker.MVVM;
+using CryptoChecker.Views.Pages;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace CryptoChecker.ViewModels
 {
 	public class MainWindowViewModel : INotifyPropertyChanged
 	{
+		private Page? _mainFrameContent;
+		public Page? MainFrameContent
+		{
+			get => _mainFrameContent;
+			set
+			{	
+				_mainFrameContent = value;
+				OnPropertyChanged(nameof(MainFrameContent));
+			}
+		}
+
 		private ObservableCollection<CryptoCoin> _coinsList = [];
 		public ObservableCollection<CryptoCoin> CoinsList
 		{
@@ -19,6 +34,12 @@ namespace CryptoChecker.ViewModels
 				_coinsList = value;
 				OnPropertyChanged(nameof(CoinsList));
 			}
+		}
+
+		public MainWindowViewModel()
+		{
+			MainFrameContent = new MainPage();
+			OpenCoinPageCommand = new RelayCommand(OpenCoinPage);
 		}
 
 		public async Task FetchData()
@@ -51,6 +72,14 @@ namespace CryptoChecker.ViewModels
 						Math.Round(coin.Price_Change_Percentage_7d_In_Currency, 1);
 				}
 			}
+		}
+
+		// Commands
+		public ICommand OpenCoinPageCommand { get; }
+
+		private void OpenCoinPage(object? parameter)
+		{
+			// TODO: Make OpenCoinPage command
 		}
 
 		// INotifyPropertyChanged
