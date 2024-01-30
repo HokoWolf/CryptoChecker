@@ -21,19 +21,32 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Padding" Value="0 20 0 20" />
+                    <Setter Property="BorderBrush" Value="LightGray" />
+                    <Setter Property="BorderThickness" Value="0, 0, 0, 1" />
+                    <Setter Property="Background" Value="White" />
                     <Setter Property="Foreground" Value="Black" />
                     <Setter Property="FontWeight" Value="Regular" />
+                    <Setter Property="Cursor" Value="Hand" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                <Border BorderBrush="LightGray" BorderThickness="0, 0.5, 0, 0"
-                                        Padding="0 20 0 20">
+                                <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        Padding="{TemplateBinding Padding}" 
+                                        Background="{TemplateBinding Background}" 
+                                        Cursor="{TemplateBinding Cursor}"> 
                                     <GridViewRowPresenter 
                                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#EAEAEA"/>
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
 
@@ -41,18 +54,21 @@
                 <GridView AllowsColumnReorder="False">
                     <GridView.ColumnHeaderContainerStyle>
                         <Style TargetType="{x:Type GridViewColumnHeader}">
-                            <Setter Property="Padding" Value="20 10 20 10" />
                             <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            <Setter Property="Padding" Value="20 10 20 10" />
+                            <Setter Property="BorderThickness" Value="0 2 0 2" />
+                            <Setter Property="Background" Value="Transparent" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
                                         <Grid>
                                             <Border x:Name="HeaderBorder"
-                                                    Background="Transparent"
+                                                    Background="{TemplateBinding Background}"
                                                     BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="0 1 0 1"
-                                                    Padding="20 10 20 10">
-                                                <ContentPresenter VerticalAlignment="Center" />
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter 
+                                                    VerticalAlignment="{TemplateBinding VerticalAlignment}" />
                                             </Border>
                                         </Grid>
                                     </ControlTemplate>
@@ -73,7 +89,7 @@
                     <GridViewColumn Width="auto" Header="Coin">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Cursor="Hand">
+                                <StackPanel Orientation="Horizontal">
                                     <Image Source="{Binding Image}" Width="40" Height="40" 
                                            VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
