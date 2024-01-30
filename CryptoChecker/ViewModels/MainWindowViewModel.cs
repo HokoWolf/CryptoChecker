@@ -10,7 +10,7 @@ namespace CryptoChecker.ViewModels
 {
 	public class MainWindowViewModel : INotifyPropertyChanged
 	{
-		private ObservableCollection<CryptoCoin> _coinsList = new ObservableCollection<CryptoCoin>();
+		private ObservableCollection<CryptoCoin> _coinsList = [];
 		public ObservableCollection<CryptoCoin> CoinsList
 		{
 			get => _coinsList;
@@ -23,33 +23,32 @@ namespace CryptoChecker.ViewModels
 
 		public async Task FetchData()
 		{
-			using (HttpClient client = new())
+			using HttpClient client = new();
+
+			client.DefaultRequestHeaders.Add("User-Agent",
+				((App)Application.Current).AppSettings.HttpClient.UserAgent);
+
+			var api = ((App)Application.Current).AppSettings.GeckoCoinApi;
+			var response = await client.GetAsync(Path.Combine(api.MainApiUrl, api.TopCoinsUrl));
+
+			if (response.IsSuccessStatusCode)
 			{
-				client.DefaultRequestHeaders.Add("User-Agent", 
-					((App)Application.Current).AppSettings.HttpClient.UserAgent);
+				var result = await response.Content.ReadAsStringAsync();
+				CoinsList = new(JsonConvert.DeserializeObject<List<CryptoCoin>>(result)!
+					.OrderBy(coin => coin.Market_Cap_Rank));
 
-				var api = ((App)Application.Current).AppSettings.GeckoCoinApi;
-				var response = await client.GetAsync(Path.Combine(api.MainApiUrl, api.Top10CoinsUrl));
-
-				if (response.IsSuccessStatusCode)
+				foreach (var coin in CoinsList)
 				{
-					var result = await response.Content.ReadAsStringAsync();
-					CoinsList = new ObservableCollection<CryptoCoin>(
-						JsonConvert.DeserializeObject<List<CryptoCoin>>(result)!);
+					coin.Symbol = coin.Symbol.ToUpper();
 
-					foreach (var coin in CoinsList)
-					{
-						coin.Symbol = coin.Symbol.ToUpper();
+					coin.Price_Change_Percentage_1h_In_Currency =
+						Math.Round(coin.Price_Change_Percentage_1h_In_Currency, 1);
 
-						coin.Price_Change_Percentage_1h_In_Currency = 
-							Math.Round(coin.Price_Change_Percentage_1h_In_Currency, 1);
+					coin.Price_Change_Percentage_24h_In_Currency =
+						Math.Round(coin.Price_Change_Percentage_24h_In_Currency, 1);
 
-						coin.Price_Change_Percentage_24h_In_Currency =
-							Math.Round(coin.Price_Change_Percentage_24h_In_Currency, 1);
-
-						coin.Price_Change_Percentage_7d_In_Currency =
-							Math.Round(coin.Price_Change_Percentage_7d_In_Currency, 1);
-					}
+					coin.Price_Change_Percentage_7d_In_Currency =
+						Math.Round(coin.Price_Change_Percentage_7d_In_Currency, 1);
 				}
 			}
 		}
